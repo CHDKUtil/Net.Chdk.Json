@@ -19,7 +19,7 @@ namespace Net.Chdk.Json
         {
             var str = reader.Value as string;
             if (str == null)
-                throw new JsonSerializationException();
+                return null;
             try
             {
                 var fromBase = GetBase(str);
