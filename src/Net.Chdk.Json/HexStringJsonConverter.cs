@@ -7,7 +7,7 @@ namespace Net.Chdk.Json
     {
         public override bool CanConvert(Type objectType)
         {
-            return typeof(uint).Equals(objectType);
+            return typeof(uint).Equals(objectType) || typeof(ulong).Equals(objectType);
         }
 
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
@@ -22,7 +22,10 @@ namespace Net.Chdk.Json
                 throw new JsonSerializationException();
             try
             {
-                return Convert.ToUInt32(str, GetBase(str));
+                var fromBase = GetBase(str);
+                if (objectType == typeof(uint))
+                    return Convert.ToUInt32(str, fromBase);
+                return Convert.ToUInt64(str, fromBase);
             }
             catch (Exception ex)
             {
