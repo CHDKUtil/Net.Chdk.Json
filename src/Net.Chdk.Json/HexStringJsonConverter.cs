@@ -19,11 +19,15 @@ namespace Net.Chdk.Json
         {
             var str = reader.Value as string;
             if (str == null)
-                return null;
+            {
+                if (objectType == typeof(uint?) || objectType == typeof(ulong?))
+                    return null;
+                throw new JsonSerializationException();
+            }
             try
             {
                 var fromBase = GetBase(str);
-                if (objectType == typeof(uint))
+                if (objectType == typeof(uint) || objectType == typeof(uint?))
                     return Convert.ToUInt32(str, fromBase);
                 return Convert.ToUInt64(str, fromBase);
             }
