@@ -5,6 +5,18 @@ namespace Net.Chdk.Json
 {
     public sealed class HexStringJsonConverter : JsonConverter
     {
+        private string Format { get; }
+
+        public HexStringJsonConverter()
+            : this("x")
+        {
+        }
+
+        public HexStringJsonConverter(string format)
+        {
+            Format = $"0x{{0:{format}}}";
+        }
+
         public override bool CanConvert(Type objectType)
         {
             return typeof(uint).Equals(objectType) || typeof(ulong).Equals(objectType);
@@ -12,7 +24,8 @@ namespace Net.Chdk.Json
 
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {
-            writer.WriteValue($"0x{value:x}");
+            var str = string.Format(Format, value);
+            writer.WriteValue(str);
         }
 
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
